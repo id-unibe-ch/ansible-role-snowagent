@@ -1,0 +1,22 @@
+---
+# tasks file for snowagent
+#
+
+# TODO: This needs to be set correctly!
+#- name: Install Snow Agent (Linux)
+#  ansible.builtin.yum:
+#    name: "{{ snowagent_baseurl }}/{{ snowagent_version }}"
+#    state: present
+#
+
+- name: Ensure /opt/snow exists
+  ansible.builtin.file:
+    path: /opt/snow
+    state: directory
+    mode: '0750'
+
+- name: Copy snowagent config
+  ansible.builtin.template:
+    src: snowagent.config.j2
+    dest: /opt/snow/snowagent.config
+    mode: '0640'
