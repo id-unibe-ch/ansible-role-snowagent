@@ -10,7 +10,6 @@ lint: |
 platforms:
   - name: instance
     image: "rockylinux:9"
-    command: ""
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
