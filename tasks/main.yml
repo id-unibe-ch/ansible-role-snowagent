@@ -3,11 +3,10 @@
 #
 
 # TODO: This needs to be set correctly!
-#- name: Install Snow Agent (Linux)
-#  ansible.builtin.yum:
-#    name: "{{ snowagent_baseurl }}/{{ snowagent_version }}"
-#    state: present
-#
+# - name: Install Snow Agent (Linux)
+#   ansible.builtin.yum:
+#     name: "{{ snowagent_baseurl }}/{{ snowagent_version }}"
+#     state: present
 
 - name: Ensure /opt/snow exists
   ansible.builtin.file:

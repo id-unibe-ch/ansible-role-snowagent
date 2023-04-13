@@ -1,11 +1,10 @@
 ---
 # defaults file for snowagent
 
-
 snowagent_endpoint: 'https://uni-sam-gw1.campus.unibe.ch'
 snowagent_sitename: 'unibe-zb-id'
-snowagent_baseurl:  'https://tools.id.unibe.ch/snowagent/'
-snowagent_version:  '6.3.1-1'
+snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
+snowagent_version: '6.3.1-1'
 snowagent_loglevel: 'warning'
 snowagent_excludes:
   - '/home/*'
