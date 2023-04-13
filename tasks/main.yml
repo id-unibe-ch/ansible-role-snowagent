@@ -30,13 +30,3 @@
     owner: root
     group: root
     mode: 0640
-
-- name: Snowagent | Check runtime
-  ansible.builtin.command: "/opt/snow/snowagent -w /opt/snow/"
-  register: snowagent_out
-  when: ansible_verbosity>2 or (snowagent_now is defined and snowagent_now)
-
-- name: debug
-  ansible.builtin.debug:
-    msg: "{{ snowagent_out }}"
-  when: ansible_verbosity>2
