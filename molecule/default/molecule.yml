@@ -10,7 +10,6 @@ lint: |
 platforms:
   - name: instance
     image: "rockylinux:9"
-      #    image: "geerlingguy/docker-${MOLECULE_DISTRO:-rockylinux9}-ansible:latest"
     command: ""
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
