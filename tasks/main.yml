@@ -1,21 +1,42 @@
 ---
 # tasks file for snowagent
 #
-
-# TODO: This needs to be set correctly!
-# - name: Install Snow Agent (Linux)
-#   ansible.builtin.yum:
-#     name: "{{ snowagent_baseurl }}/{{ snowagent_version }}"
-#     state: present
-
-- name: Ensure /opt/snow exists
+- name: Snowagent | Create Directories
   ansible.builtin.file:
     path: /opt/snow
     state: directory
-    mode: '0750'
+    owner: root
+    group: root
+    mode: 0750
 
-- name: Copy snowagent config
+- name: Snowagent | Install Agent RHEL
+  ansible.builtin.dnf:
+    name: "{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}-1.x86_64.rpm"
+    disable_gpg_check: yes
+  when: ansible_os_family == 'RedHat'
+  tags: molecule-notest
+
+- name: Snowagent | Install Agent DEB
+  ansible.builtin.apt:
+    deb: "{{ snowagent_baseurl }}unibe_snowagent_{{ snowagent_version }}-1_amd64.deb"
+    force: yes
+  when: ansible_os_family == 'Debian'
+  tags: molecule-notest
+
+- name: Snowagent | Copy configfile
   ansible.builtin.template:
-    src: snowagent.config.j2
+    src: snowagent.conf.j2
     dest: /opt/snow/snowagent.config
-    mode: '0640'
+    owner: root
+    group: root
+    mode: 0640
+
+- name: Snowagent | Check runtime
+  ansible.builtin.command: "/opt/snow/snowagent -w /opt/snow/"
+  register: snowagent_out
+  when: ansible_verbosity>2 or (snowagent_now is defined and snowagent_now)
+
+- name: debug
+  ansible.builtin.debug:
+    msg: "{{ snowagent_out }}"
+  when: ansible_verbosity>2
