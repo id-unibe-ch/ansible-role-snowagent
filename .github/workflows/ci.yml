@@ -8,8 +8,8 @@ name: CI
 
 jobs:
 
-  test:
-    name: molecule
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -22,11 +22,46 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install test dependencies
-        run: pip3 install molecule[docker] yamllint ansible-lint
+      - name: Install test dependencies.
+        run: pip3 install molecule 'molecule-plugins[docker]' yamllint ansible-lint
 
-      - name: Run molecule tests
+      - name: Lint code.
+        run: |
+          set -e
+          yamllint .
+          ansible-lint
+
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - distro: rockylinux8
+            playbook: converge.yml
+          - distro: rockylinux9
+            playbook: converge.yml
+          - distro: ubuntu2004
+            playbook: converge.yml
+          - distro: ubuntu2204
+            playbook: converge.yml
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install ansible molecule 'molecule-plugins[docker]' docker
+
+      - name: Run Molecule tests.
         run: molecule test
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_PLAYBOOK: ${{ matrix.playbook }}
