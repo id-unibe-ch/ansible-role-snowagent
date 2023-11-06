@@ -36,9 +36,11 @@
         mode: 0755
 
     - name: Prepare Download | Create RPM Package
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: fpm -v 1.0 -n snowagent -s dir -t rpm -p /usr/share/nginx/html/snowagent.rpm /tmp/snowagent=/opt/snow/snowagent
+        creates: /usr/share/nginx/html/snowagent.rpm
 
     - name: Prepare Download | Create DEB Package
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: fpm -v 1.0 -n snowagent -s dir -t deb -p /usr/share/nginx/html/snowagent.deb /tmp/snowagent=/opt/snow/snowagent
+        creates: /usr/share/nginx/html/snowagent.deb
