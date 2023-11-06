@@ -5,7 +5,7 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: ${MOLECULE_DISTRO:-rockylinux9}
+  - name: instance
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-rockylinux9}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -13,6 +13,21 @@ platforms:
     cgroupns_mode: host
     privileged: true
     pre_build_image: true
+    networks:
+      - name: snowagent_molecule_default
+
+  - name: download
+    image: "geerlingguy/docker-rockylinux9-ansible:latest"
+    command: ""
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: snowagent_molecule_default
+    exposed_ports:
+      - 80
 provisioner:
   name: ansible
   playbooks:

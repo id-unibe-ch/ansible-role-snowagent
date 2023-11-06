@@ -1,10 +1,18 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
 - name: Verify
-  hosts: all
+  hosts: instance
   gather_facts: false
   tasks:
-    - name: Example assertion
-      ansible.builtin.assert:
-        that: true
+    - name: Testing | Installation creates executable
+      ansible.builtin.stat:
+        path: /opt/snow/snowagent
+      check_mode: true
+      register: __testresult
+      failed_when: not __testresult.stat.exists
+
+    - name: Testing | Installation creates config
+      ansible.builtin.stat:
+        path: /opt/snow/snowagent.config
+      check_mode: true
+      register: __testresult
+      failed_when: not __testresult.stat.exists

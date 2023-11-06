@@ -14,14 +14,12 @@
     name: "{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}.x86_64.rpm"
     disable_gpg_check: yes
   when: ansible_os_family == 'RedHat'
-  tags: molecule-notest
 
 - name: Snowagent | Install Agent DEB
   ansible.builtin.apt:
     deb: "{{ snowagent_baseurl }}unibe_snowagent_{{ snowagent_version }}_amd64.deb"
     force: yes
   when: ansible_os_family == 'Debian'
-  tags: molecule-notest
 
 - name: Snowagent | Copy configfile
   ansible.builtin.template:

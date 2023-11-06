@@ -1,8 +1,11 @@
 ---
 - name: Converge
-  hosts: all
-  gather_facts: false
+  hosts: instance
+  gather_facts: true
   tasks:
-    - name: "Include ansible-ubelix-snowagent"
+    - name: "Include unibeid.snowagent"
       ansible.builtin.include_role:
         name: "unibeid.snowagent"
+      vars:
+        snowagent_download_deb: "http://download/snowagent.deb"
+        snowagent_download_rpm: "http://download/snowagent.rpm"
