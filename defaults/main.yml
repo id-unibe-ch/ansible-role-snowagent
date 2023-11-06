@@ -1,11 +1,28 @@
 ---
 # defaults file for snowagent
 
+# The endpoint for the snowagent
 snowagent_endpoint: 'https://uni-sam-gw1.campus.unibe.ch'
+
+# The sitename which the clients register to
 snowagent_sitename: 'unibe-zb-id'
+
+# The baseurl for which the snowagent will be downloaded
 snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
+
+# Download url of the rpm package
+snowagent_download_rpm: '{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}.x86_64.rpm'
+
+# Download url of the debian package
+snowagent_download_deb: '{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}_amd64.deb'
+
+# Version of the snowagent
 snowagent_version: '6.6.1-1'
+
+# LogLevel in the application
 snowagent_loglevel: 'warning'
+
+# Excludes of directories which will not be observed. Notice: /tmp is already escluded in the main config file
 snowagent_excludes:
   - '/home/*'
   - '/var/*'

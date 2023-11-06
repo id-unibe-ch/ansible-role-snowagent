@@ -8,24 +8,32 @@ TODO
 
 - [ ] Add exlude paths in template
 
+Requirements
+------------
+
+No prerequisites necessary at the moment.
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
+See the file [defaults/main.yml](defaults/main.yml) for a list of the current supported variables.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Reference this role in your playbook:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+---
+- name: Example playbook
+  hosts: "all"
+  roles:
+    - role: unibeid.snowagent
+      become: true
+```
 
 License
 -------
 
-BSD
-
+MIT
