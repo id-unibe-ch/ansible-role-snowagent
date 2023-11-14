@@ -1,31 +1,107 @@
-snowagent
-=========
+# snowagent
 
-Installs and configured Unibe snowagent agent for software asset management (SAM).
+Installs and configures the snowagent agent for the software asset management
+(SAM) tool of UniBE.
 
-TODO
-----
+## Requirements
 
-- [ ] Add exlude paths in template
-
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+No prerequisites necessary at the moment.
 
 
-Example Playbook
-----------------
+## Role Variables
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Available variables are listed below, along with default values (see also
+[defaults/main.yml](defaults/main.yml)):
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+For most use cases you should only change the `snowagent_sitename` (if not ID)
+and adjust the `snowagent_excludes`, i.e. mounted NAS storage or other paths that
+should get searched by the snowagent.
 
-License
--------
+### snowagent_endpoint
 
-BSD
+    snowagent_endpoint: 'https://uni-sam-gw1.campus.unibe.ch'
 
+The endpoint for the snowagent. This is the URL where the snowagent sending its
+report to.
+
+### snowagent_sitename
+
+    snowagent_sitename: 'unibe-zb-id'
+
+The name of the site that reports of the node should belong to. Defaults to the
+correct value for the IT Service Office. Ask the SAM officials for the site name
+for your organisation unit if your system does not belong to ID.
+
+### snowagent_version
+
+    snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
+
+Base URL where the snowagent packages are stored. Defaults to the base URL of the IT Office of UniBE. If in doubt, use the default.
+
+### snowagent_version
+
+    snowagent_download_rpm: '{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}.x86_64.rpm'
+
+Download URL of the RPM package. Defaults to a computed value of the current
+defaults of the IT Office of UniBE. If in doubt, use the default.
+
+### snowagent_version
+
+    snowagent_download_deb: '{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}_amd64.deb'
+
+Download URL of the Debian package. Defaults to a computed value of the current
+defaults of the IT Office of UniBE. If in doubt, use the default.
+
+### snowagent_version
+
+    snowagent_version: '6.6.1-1'
+
+The version to be installed. The default reflect the version approved and
+requested by the IT Office of UniBE.
+
+### snowagent_loglevel
+
+    snowagent_loglevel: 'warning'
+
+The log level of the application. Possible values are error, warning, info, trace, verbose; defaults to warning.
+
+### snowagent_excludes:
+
+    snowagent_excludes:
+      - '/home/*'
+      - '/var/*'
+      - '/storage/*'
+
+By default, these three paths are excluded from the search. Depending on the use
+case other paths should be removed, i.e. a NAS share mounted in the
+filesystem.
+
+## Dependencies
+
+This role has no dependencies to other roles.
+
+## Example Playbook
+
+Reference this role in your playbook:
+```yaml
+  - name: Example playbook
+    hosts: all
+    become: true
+
+    roles:
+      - role: unibeid.snowagent
+```
+## Compatibility
+
+This role has been written for and tested on and is therefore compatible with:
+
+* Rocky-8, Rocky-9
+* Ubuntu-18.04, Ubuntu-20.04, Ubuntu-22.04
+
+## License
+
+MIT
+
+## Author Information
+
+The role was created in 2023 by the IT-Services Office of the University of Bern

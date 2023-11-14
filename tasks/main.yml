@@ -11,14 +11,14 @@
 
 - name: Snowagent | Install Agent RHEL
   ansible.builtin.dnf:
-    name: "{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}.x86_64.rpm"
+    name: "{{ snowagent_download_rpm }}"
     disable_gpg_check: yes
   when: ansible_os_family == 'RedHat'
   tags: molecule-notest
 
 - name: Snowagent | Install Agent DEB
   ansible.builtin.apt:
-    deb: "{{ snowagent_baseurl }}unibe_snowagent_{{ snowagent_version }}_amd64.deb"
+    deb: "{{ snowagent_download_deb }}"
     force: yes
   when: ansible_os_family == 'Debian'
   tags: molecule-notest
