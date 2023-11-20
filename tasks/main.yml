@@ -14,14 +14,12 @@
     name: "{{ snowagent_download_rpm }}"
     disable_gpg_check: yes
   when: ansible_os_family == 'RedHat'
-  tags: molecule-notest
 
 - name: Snowagent | Install Agent DEB
   ansible.builtin.apt:
     deb: "{{ snowagent_download_deb }}"
     force: yes
   when: ansible_os_family == 'Debian'
-  tags: molecule-notest
 
 - name: Snowagent | Copy configfile
   ansible.builtin.template:

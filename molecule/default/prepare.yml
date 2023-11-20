@@ -1,0 +1,46 @@
+---
+- name: Prepare Download
+  hosts: download
+  tasks:
+    - name: Prepare Download | Install development dependencies
+      ansible.builtin.dnf:
+        name:
+          - vim
+          - nginx
+          - rpm-build
+          - squashfs-tools
+          - ruby
+        state: present
+
+    - name: Prepare Download | Start webserver
+      ansible.builtin.service:
+        name: nginx
+        enabled: true
+        state: started
+
+    - name: Prepare Download | Install fpm
+      community.general.gem:
+        name: fpm
+        user_install: false
+        state: present
+
+    - name: Prepare Download | Create executable
+      ansible.builtin.copy:
+        content: |
+          #!/usr/bin/env bash
+
+          echo "OK"
+        dest: /tmp/snowagent
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Prepare Download | Create RPM Package
+      ansible.builtin.command:
+        cmd: fpm -v 1.0 -n snowagent -s dir -t rpm -p /usr/share/nginx/html/snowagent.rpm /tmp/snowagent=/opt/snow/snowagent
+        creates: /usr/share/nginx/html/snowagent.rpm
+
+    - name: Prepare Download | Create DEB Package
+      ansible.builtin.command:
+        cmd: fpm -v 1.0 -n snowagent -s dir -t deb -p /usr/share/nginx/html/snowagent.deb /tmp/snowagent=/opt/snow/snowagent
+        creates: /usr/share/nginx/html/snowagent.deb
