@@ -19,10 +19,9 @@
         state: started
 
     - name: Prepare Download | Install fpm
-      community.general.gem:
-        name: fpm
-        user_install: false
-        state: present
+      ansible.builtin.command:
+        cmd: gem install fpm
+      changed_when: true
 
     - name: Prepare Download | Create executable
       ansible.builtin.copy:
