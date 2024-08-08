@@ -1,18 +1,36 @@
 ---
 # tasks file for snowagent
 #
-- name: Snowagent | Create Directories
-  ansible.builtin.file:
-    path: /opt/snow
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+
+- name: Snowagent | Add RPM gpg-key
+  ansible.builtin.rpm_key:
+    key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
+  when: ansible_os_family == 'RedHat'
+
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Snowagent | Remove Agent if not the right Vesion RHEL
+  ansible.builtin.dnf:
+    name: "{{ snowagent_pkg }}"
+    state: absent
+  when: ansible_os_family == 'RedHat' and snowagent_current_version is defined and snowagent_current_version != snowagent_version
+
+- name: Snowagent | print Versions RHEL
+  ansible.builtin.debug:
+    msg: "{{ snowagent_download_rpm }}"
+  when: ansible_os_family == 'RedHat'
+
+- name: Snowagent | print Agent RHEL
+  ansible.builtin.debug:
+    msg: "{{ snowagent_current_version }} / {{ snowagent_version }}"
+  when: ansible_os_family == 'RedHat'
 
 - name: Snowagent | Install Agent RHEL
   ansible.builtin.dnf:
     name: "{{ snowagent_download_rpm }}"
-    disable_gpg_check: yes
+    state: present
   when: ansible_os_family == 'RedHat'
 
 - name: Snowagent | Install Agent DEB
@@ -21,10 +39,9 @@
     force: yes
   when: ansible_os_family == 'Debian'
 
-- name: Snowagent | Copy configfile
-  ansible.builtin.template:
-    src: snowagent.config.j2
-    dest: /opt/snow/snowagent.config
-    owner: root
-    group: root
-    mode: 0640
+- name: Snowagent | Put the right in the configfile
+  ansible.builtin.lineinfile:
+    path: /opt/snow/snowagent.config
+    line: "<SiteName>{{ snowagent_sitename }}</SiteName>"
+    regexp: "<SiteName>unibe</SiteName>"
+    state: present
