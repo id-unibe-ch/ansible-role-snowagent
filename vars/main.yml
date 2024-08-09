@@ -1,4 +1,3 @@
 ---
 
 snowagent_current_version: "{{ ansible_facts.packages[snowagent_pkg][0].version | default(None) }}"
-
