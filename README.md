@@ -32,20 +32,20 @@ The name of the site that reports of the node should belong to. Defaults to the
 correct value for the IT Service Office. Ask the SAM officials for the site name
 for your organisation unit if your system does not belong to ID.
 
-### snowagent_version
+### snowagent_baseurl
 
     snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
 
 Base URL where the snowagent packages are stored. Defaults to the base URL of the IT Office of UniBE. If in doubt, use the default.
 
-### snowagent_version
+### snowagent_download_rpm
 
     snowagent_download_rpm: "{{ snowagent_baseurl }}{{ snowagent_crypted_version }}-{{ snowagent_pkg }}-{{ snowagent_version }}-x64.rpm"
 
 Download URL of the RPM package. Defaults to a computed value of the current
 defaults of the IT Office of UniBE. If in doubt, use the default.
 
-### snowagent_version
+### snowagent_download_rpm
 
     snowagent_download_rpm: "{{ snowagent_baseurl }}{{ snowagent_crypted_version }}-{{ snowagent }}-{{ snowagent_version }}-x64.rpm"
 
@@ -54,10 +54,16 @@ defaults of the IT Office of UniBE. If in doubt, use the default.
 
 ### snowagent_version
 
-    snowagent_version: '04788015-Lin_S_V2-snowagent-7.0.1'
+    snowagent_version: '7.0.1'
 
 The version to be installed. The default reflect the version approved and
 requested by the IT Office of UniBE.
+
+### snowagent_crypted_version
+
+    snowagent_crypted_version: "04788015-Lin_S_V2"
+
+Used to generate the pkg file name.
 
 ### snowagent_loglevel
 

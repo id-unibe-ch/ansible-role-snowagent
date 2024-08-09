@@ -1,6 +1,13 @@
 ---
 # tasks file for snowagent
 #
+- name: Snowagent | Create Directories
+  ansible.builtin.file:
+    path: /opt/snow
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Snowagent | Add RPM gpg-key
   ansible.builtin.rpm_key:
@@ -24,7 +31,7 @@
 
 - name: Snowagent | print Agent RHEL
   ansible.builtin.debug:
-    msg: "{{ snowagent_current_version }} / {{ snowagent_version }}"
+    msg: "Current version: {{ snowagent_current_version }} update to version {{ snowagent_version }}"
   when: ansible_os_family == 'RedHat'
 
 - name: Snowagent | Install Agent RHEL
@@ -45,3 +52,4 @@
     line: "<SiteName>{{ snowagent_sitename }}</SiteName>"
     regexp: "<SiteName>unibe</SiteName>"
     state: present
+  ignore_errors: "{{ ansible_check_mode }}"
