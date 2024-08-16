@@ -14,25 +14,24 @@
     key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
   when: ansible_os_family == 'RedHat'
 
-- name: Gather the package facts
-  ansible.builtin.package_facts:
-    manager: auto
+- name: Get Snowagent version
+  ansible.builtin.command: /opt/snow/snowagent version
+  register: snowagent_current_version 
+  changed_when: false
+  # changed: false # wir lesen nur die Version
+  check_mode: false # damit wir auch in check Mode die Snowagent Version kriegen
+  ignore_errors: true # wenn der Agent noch nicht installiert ist
+
+- name: Snowagent | print Agent version RHEL
+  ansible.builtin.debug:
+    msg: "Current version: {{ snowagent_current_version.stdout }} update to version {{ snowagent_version }}"
+  when: ansible_os_family == 'RedHat'
 
 - name: Snowagent | Remove Agent if not the right Vesion RHEL
   ansible.builtin.dnf:
     name: "{{ snowagent_pkg }}"
     state: absent
-  when: ansible_os_family == 'RedHat' and snowagent_current_version is defined and snowagent_current_version != snowagent_version
-
-- name: Snowagent | print Versions RHEL
-  ansible.builtin.debug:
-    msg: "{{ snowagent_download_rpm }}"
-  when: ansible_os_family == 'RedHat'
-
-- name: Snowagent | print Agent RHEL
-  ansible.builtin.debug:
-    msg: "Current version: {{ snowagent_current_version }} update to version {{ snowagent_version }}"
-  when: ansible_os_family == 'RedHat'
+  when: ansible_os_family == 'RedHat' and snowagent_version not in snowagent_current_version.stdout
 
 - name: Snowagent | Install Agent RHEL
   ansible.builtin.dnf:
@@ -46,10 +45,20 @@
     force: yes
   when: ansible_os_family == 'Debian'
 
-- name: Snowagent | Put the right in the configfile
+- name: Snowagent | Put the right SiteName in the configfile
   ansible.builtin.lineinfile:
     path: /opt/snow/snowagent.config
     line: "<SiteName>{{ snowagent_sitename }}</SiteName>"
     regexp: "<SiteName>unibe</SiteName>"
     state: present
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Snowagent | Put the Exclude Path in the configfile
+  ansible.builtin.lineinfile:
+    path: /opt/snow/snowagent.config
+    line: "<Path>{{ item }}</Path>"
+    regexp: "<Path>{{ item }}</Path>"
+    insertafter: "<Exclude>"
+    state: present
+  with_items: "{{ snowagent_excludes }}"
   ignore_errors: "{{ ansible_check_mode }}"
