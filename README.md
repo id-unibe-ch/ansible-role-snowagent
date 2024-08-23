@@ -40,14 +40,14 @@ Base URL where the snowagent packages are stored. Defaults to the base URL of th
 
 ### snowagent_download_rpm
 
-    snowagent_download_rpm: "{{ snowagent_baseurl }}{{ snowagent_crypted_version }}-{{ snowagent_pkg }}-{{ snowagent_version }}-x64.rpm"
+    snowagent_download_rpm: '{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}.x86_64.rpm'
 
 Download URL of the RPM package. Defaults to a computed value of the current
 defaults of the IT Office of UniBE. If in doubt, use the default.
 
-### snowagent_download_rpm
+### snowagent_download_deb
 
-    snowagent_download_rpm: "{{ snowagent_baseurl }}{{ snowagent_crypted_version }}-{{ snowagent }}-{{ snowagent_version }}-x64.rpm"
+    snowagent_download_deb: '{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}_amd64.deb'
 
 Download URL of the Debian package. Defaults to a computed value of the current
 defaults of the IT Office of UniBE. If in doubt, use the default.
@@ -58,12 +58,6 @@ defaults of the IT Office of UniBE. If in doubt, use the default.
 
 The version to be installed. The default reflect the version approved and
 requested by the IT Office of UniBE.
-
-### snowagent_crypted_version
-
-    snowagent_crypted_version: "04788015-Lin_S_V2"
-
-Used to generate the pkg file name.
 
 ### snowagent_loglevel
 

@@ -1,12 +1,6 @@
 ---
 # defaults file for snowagent
 
-snowagent_pkg: "snowagent"
-
-# Version of the snowagent
-snowagent_version: "7.0.1"
-snowagent_crypted_version: "04788015-Lin_S_V2"
-
 # The endpoint for the snowagent
 snowagent_endpoint: "https://uni-sam-gw1.campus.unibe.ch"
 
@@ -17,10 +11,13 @@ snowagent_sitename: "unibe-zb-id"
 snowagent_baseurl: "https://tools.id.unibe.ch/snowagent/"
 
 # Download url of the rpm package
-snowagent_download_rpm: "{{ snowagent_baseurl }}{{ snowagent_crypted_version }}-{{ snowagent_pkg }}-{{ snowagent_version }}-x64.rpm"
+snowagent_download_rpm: "{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_version }}.x86_64.rpm"
 
 # Download url of the debian package
-snowagent_download_deb: "{{ snowagent_baseurl }}{{ snowagent_crypted_version }}-{{ snowagent_pkg }}-{{ snowagent_version }}-x64.deb"
+snowagent_download_deb: "{{ snowagent_baseurl }}unibe_snowagent_{{ snowagent_version }}_amd64.deb"
+
+# Version of the snowagent
+snowagent_version: "7.0.1"
 
 # LogLevel in the application
 snowagent_loglevel: "warning"

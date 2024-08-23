@@ -18,9 +18,9 @@
   ansible.builtin.command: /opt/snow/snowagent version
   register: snowagent_current_version 
   changed_when: false
-  # changed: false # wir lesen nur die Version
-  check_mode: false # damit wir auch in check Mode die Snowagent Version kriegen
-  ignore_errors: true # wenn der Agent noch nicht installiert ist
+  changed: false
+  check_mode: false
+  ignore_errors: true
 
 - name: Snowagent | print Agent version RHEL
   ansible.builtin.debug:
@@ -45,20 +45,10 @@
     force: yes
   when: ansible_os_family == 'Debian'
 
-- name: Snowagent | Put the right SiteName in the configfile
-  ansible.builtin.lineinfile:
-    path: /opt/snow/snowagent.config
-    line: "<SiteName>{{ snowagent_sitename }}</SiteName>"
-    regexp: "<SiteName>unibe</SiteName>"
-    state: present
-  ignore_errors: "{{ ansible_check_mode }}"
-
-- name: Snowagent | Put the Exclude Path in the configfile
-  ansible.builtin.lineinfile:
-    path: /opt/snow/snowagent.config
-    line: "<Path>{{ item }}</Path>"
-    regexp: "<Path>{{ item }}</Path>"
-    insertafter: "<Exclude>"
-    state: present
-  with_items: "{{ snowagent_excludes }}"
-  ignore_errors: "{{ ansible_check_mode }}"
+- name: Snowagent | Copy configfile
+  ansible.builtin.template:
+    src: snowagent.config.j2
+    dest: /opt/snow/snowagent.config
+    owner: root
+    group: root
+    mode: 0640
