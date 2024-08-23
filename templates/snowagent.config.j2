@@ -69,7 +69,7 @@
       <Setting key="software.scan.rpm" value="true" />
 
       <!-- Check for server certificate -->
-      <Setting key="http.ssl_verify" value="false"/>
+      <Setting key="http.ssl_verify" value="{{ snowagent_ssl_verify }}"/>
 
       <!-- Append the log files -->
       <Setting key="log.append" value="false"/>
@@ -79,6 +79,13 @@
 
       <!-- Logging folder for snowagent.log -->
       <Setting key="env.log_dir" value="data/"/>
+
+      <!-- Attempt to find bind mounts and add these to the list of directories to be ignored -->
+      <Setting key="software.scan.ignore_bind_mounts" value="{{ snowagent_ignore_bind_mounts }}"/>
+      <!-- Ignore autofs mounts -->
+      <Setting key="software.scan.ignore_autofs_mounts" value="{{ snowagent_ignore_autofs_mounts }}"/>
+      <!-- Disable remote updates -->
+      <Setting key="disable_all_updates" value="{{ snowagent_disable_all_updates }}" />
 
       <!-- Java executable to run SIOS.jar, configure if java.exe is not in the PATH -->
       <!-- <Setting key="env.java_home" value="java/bin/java"/> -->
