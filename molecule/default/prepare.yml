@@ -32,7 +32,7 @@
         dest: /tmp/snowagent
         owner: root
         group: root
-        mode: 0755
+        mode: "0755"
 
     - name: Prepare Download | Create RPM Package
       ansible.builtin.command:

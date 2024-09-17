@@ -7,7 +7,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 - name: Install Agent on RHEL-based system
   when: ansible_os_family == 'RedHat'
@@ -48,4 +48,4 @@
     dest: /opt/snow/snowagent.config
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
