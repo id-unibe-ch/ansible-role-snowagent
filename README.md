@@ -95,8 +95,8 @@ Reference this role in your playbook:
 
 This role has been written for and tested on and is therefore compatible with:
 
-* Rocky-8
-* Ubuntu-22.04, Ubuntu-24.04
+* Rocky Linux 8, Rocky Linux 9
+* Ubuntu 20.04, Ubuntu 22.04, Ubuntu 24.04
 
 ## License
 
