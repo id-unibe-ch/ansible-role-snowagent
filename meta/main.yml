@@ -29,9 +29,9 @@ galaxy_info:
         - '9'
     - name: Ubuntu
       version:
+        - focal
         - jammy
-        - lemmy
-        - bionic
+        - noble
 
   galaxy_tags: []
 

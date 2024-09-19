@@ -70,6 +70,9 @@
 
       <!-- Check for server certificate -->
       <Setting key="http.ssl_verify" value="{{ snowagent_ssl_verify }}"/>
+{% if ansible_os_family == 'Debian' %}
+      <Setting key="http.ssl_capath" value="/etc/ssl/certs/ca-certificates.crt"/>
+{% endif %}
 
       <!-- Append the log files -->
       <Setting key="log.append" value="false"/>

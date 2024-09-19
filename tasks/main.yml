@@ -1,49 +1,51 @@
 ---
 # tasks file for snowagent
 #
-- name: Snowagent | Create Directories
+- name: Create Directories
   ansible.builtin.file:
     path: /opt/snow
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
-- name: Snowagent | Add RPM gpg-key
-  ansible.builtin.rpm_key:
-    key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
+- name: Install Agent on RHEL-based system
   when: ansible_os_family == 'RedHat'
+  block:
+    - name: Add RPM gpg-key
+      ansible.builtin.rpm_key:
+        key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
+      when: ansible_os_family == 'RedHat'
 
-- name: Get Snowagent version
-  ansible.builtin.command: /opt/snow/snowagent version
-  register: snowagent_current_version 
-  when: ansible_os_family == 'RedHat'
-  changed_when: false
-  check_mode: false
-  ignore_errors: true
+    - name: Get Snowagent version
+      ansible.builtin.command: /opt/snow/snowagent version
+      register: snowagent_current_version
+      when: ansible_os_family == 'RedHat'
+      changed_when: false
+      check_mode: false
+      ignore_errors: true
 
-- name: Snowagent | Remove Agent if not the right Vesion RHEL
-  ansible.builtin.dnf:
-    name: snowagent
-    state: absent
-  when: ansible_os_family == 'RedHat' and snowagent_version not in snowagent_current_version.stdout
+    - name: Remove Agent if not the right version RHEL
+      ansible.builtin.dnf:
+        name: snowagent
+        state: absent
+      when: ansible_os_family == 'RedHat' and snowagent_version not in snowagent_current_version.stdout
 
-- name: Snowagent | Install Agent RHEL
-  ansible.builtin.dnf:
-    name: "{{ snowagent_download_rpm }}"
-    state: present
-  when: ansible_os_family == 'RedHat'
+    - name: Install Agent RHEL
+      ansible.builtin.dnf:
+        name: "{{ snowagent_download_rpm }}"
+        state: present
 
-- name: Snowagent | Install Agent DEB
+- name: Install Agent on Debian-based system
   ansible.builtin.apt:
     deb: "{{ snowagent_download_deb }}"
     force: yes
   when: ansible_os_family == 'Debian'
 
-- name: Snowagent | Copy configfile
+- name: Copy configfile
   ansible.builtin.template:
     src: snowagent.config.j2
     dest: /opt/snow/snowagent.config
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
