@@ -47,6 +47,12 @@ If set to true - the default - the Snow inventory agent also scans running
 processes and adds them to the report. This might potentially reveal sensitive
 data. If so, set this to "false" to prevent this step.
 
+### snowagent_ssl_verify
+
+    snowagent_ssl_verify: "true"
+
+If set to true - the default - the snow inventory agent checks the validity of the endpoint's SSL certificate. Set this to "false" if your endpoint uses a self-signed certificate.
+
 ### snowagent_baseurl
 
     snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
