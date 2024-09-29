@@ -17,6 +17,13 @@ For most use cases you should only change the `snowagent_sitename` (if not ID)
 and adjust the `snowagent_excludes`, i.e. mounted NAS storage or other paths that
 should get searched by the snowagent.
 
+### snowagent_agent_state
+
+    snowagent_agent_state: "present"
+
+If set to "present", the Snow inventory agent is installed, while setting this
+to "absent" will completely remove it from the system. Defaults to "present".
+
 ### snowagent_endpoint
 
     snowagent_endpoint: 'https://uni-sam-gw1.campus.unibe.ch'
@@ -36,7 +43,8 @@ for your organisation unit if your system does not belong to ID.
 
     snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
 
-Base URL where the snowagent packages are stored. Defaults to the base URL of the IT Office of UniBE. If in doubt, use the default.
+Base URL where the snowagent packages are stored. Defaults to the base URL of
+the IT Office of UniBE. If in doubt, use the default.
 
 ### snowagent_download_rpm
 

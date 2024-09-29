@@ -1,6 +1,9 @@
 ---
 # defaults file for snowagent
 
+# Set this to absent to completely remove the snowagent
+snowagent_agent_state: "present"
+
 # The endpoint for the snowagent
 snowagent_endpoint: "https://uni-sam-gw1.campus.unibe.ch"
 
