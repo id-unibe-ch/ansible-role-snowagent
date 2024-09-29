@@ -25,6 +25,9 @@ snowagent_version: "7.0.1"
 # LogLevel in the application
 snowagent_loglevel: "warning"
 
+# If running processes should be scanned
+snowagent_scan_running_procs: "true"
+
 # If SSL-Verification should be enabled
 snowagent_ssl_verify: "true"
 

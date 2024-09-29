@@ -39,6 +39,14 @@ The name of the site that reports of the node should belong to. Defaults to the
 correct value for the IT Service Office. Ask the SAM officials for the site name
 for your organisation unit if your system does not belong to ID.
 
+### snowagent_scan_running_procs
+
+    snowagent_scan_running_procs: "true"
+
+If set to true - the default - the Snow inventory agent also scans running
+processes and adds them to the report. This might potentially reveal sensitive
+data. If so, set this to "false" to prevent this step.
+
 ### snowagent_baseurl
 
     snowagent_baseurl: 'https://tools.id.unibe.ch/snowagent/'
