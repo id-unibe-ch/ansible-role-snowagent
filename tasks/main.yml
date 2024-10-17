@@ -1,51 +1,59 @@
 ---
 # tasks file for snowagent
 #
-- name: Create Directories
-  ansible.builtin.file:
-    path: /opt/snow
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
+- name: Purge the Snow inventory agent
+  ansible.builtin.import_tasks:
+    file: uninstall.yml
+  when: snowagent_agent_state == "absent"
 
-- name: Install Agent on RHEL-based system
-  when: ansible_os_family == 'RedHat'
+- name: Deploy the Snow inventory agent
+  when: snowagent_agent_state == "present"
   block:
-    - name: Add RPM gpg-key
-      ansible.builtin.rpm_key:
-        key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
-      when: ansible_os_family == 'RedHat'
+  - name: Create Directories
+    ansible.builtin.file:
+      path: /opt/snow
+      state: directory
+      owner: root
+      group: root
+      mode: "0755"
 
-    - name: Get Snowagent version
-      ansible.builtin.command: /opt/snow/snowagent version
-      register: snowagent_current_version
-      when: ansible_os_family == 'RedHat'
-      changed_when: false
-      check_mode: false
-      ignore_errors: true
+  - name: Install Agent on RHEL-based system
+    when: ansible_os_family == 'RedHat'
+    block:
+      - name: Add RPM gpg-key
+        ansible.builtin.rpm_key:
+          key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
+        when: ansible_os_family == 'RedHat'
 
-    - name: Remove Agent if not the right version RHEL
-      ansible.builtin.dnf:
-        name: snowagent
-        state: absent
-      when: ansible_os_family == 'RedHat' and snowagent_version not in snowagent_current_version.stdout
+      - name: Get Snowagent version
+        ansible.builtin.command: /opt/snow/snowagent version
+        register: snowagent_current_version
+        when: ansible_os_family == 'RedHat'
+        changed_when: false
+        check_mode: false
+        ignore_errors: true
 
-    - name: Install Agent RHEL
-      ansible.builtin.dnf:
-        name: "{{ snowagent_download_rpm }}"
-        state: present
+      - name: Remove Agent if not the right version RHEL
+        ansible.builtin.dnf:
+          name: snowagent
+          state: absent
+        when: ansible_os_family == 'RedHat' and snowagent_version not in snowagent_current_version.stdout
 
-- name: Install Agent on Debian-based system
-  ansible.builtin.apt:
-    deb: "{{ snowagent_download_deb }}"
-    force: yes
-  when: ansible_os_family == 'Debian'
+      - name: Install Agent RHEL
+        ansible.builtin.dnf:
+          name: "{{ snowagent_download_rpm }}"
+          state: present
 
-- name: Copy configfile
-  ansible.builtin.template:
-    src: snowagent.config.j2
-    dest: /opt/snow/snowagent.config
-    owner: root
-    group: root
-    mode: "0640"
+  - name: Install Agent on Debian-based system
+    ansible.builtin.apt:
+      deb: "{{ snowagent_download_deb }}"
+      force: yes
+    when: ansible_os_family == 'Debian'
+
+  - name: Copy configfile
+    ansible.builtin.template:
+      src: snowagent.config.j2
+      dest: /opt/snow/snowagent.config
+      owner: root
+      group: root
+      mode: "0640"
