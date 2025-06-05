@@ -22,7 +22,9 @@
   <!-- Configuration for File System scan-->
   <Software>
     <Include>
-      <Path recursive="true" unconditionally="false">/*</Path>
+{% for path in snowagent_includes %}
+      <Path recursive="true" unconditionally="false">{{ path }}</Path>
+{% endfor %}
     </Include>
     <IncludeCriteria enabled="true">
       <FileType>ELF*executable*</FileType>
