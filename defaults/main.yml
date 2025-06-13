@@ -40,6 +40,12 @@ snowagent_ignore_autofs_mounts: "true"
 # Disable remote updates
 snowagent_disable_all_updates: "true"
 
+# Includes of directories which will not be observed. Notice: /tmp is already escluded in the main config file
+snowagent_includes:
+  - "/etc/*"
+  - "/usr/*"
+  - "/opt/*"
+
 # Excludes of directories which will not be observed. Notice: /tmp is already escluded in the main config file
 snowagent_excludes:
   - "/home/*"
