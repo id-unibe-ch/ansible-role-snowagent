@@ -20,7 +20,7 @@ snowagent_download_rpm: "{{ snowagent_baseurl }}unibe_snowagent-{{ snowagent_ver
 snowagent_download_deb: "{{ snowagent_baseurl }}unibe_snowagent_{{ snowagent_version }}_amd64.deb"
 
 # Version of the snowagent
-snowagent_version: "7.0.1"
+snowagent_version: "7.4.1"
 
 # LogLevel in the application
 snowagent_loglevel: "warning"
