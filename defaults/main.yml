@@ -22,6 +22,11 @@ snowagent_download_deb: "{{ snowagent_baseurl }}unibe_snowagent_{{ snowagent_ver
 # Version of the snowagent
 snowagent_version: "7.4.1"
 
+# Whether the RPM gpg signature check should be skipped when installing the
+# agent package on RHEL-based systems. Defaults to false so the signature
+# added via snowagent_baseurl's signing key is always verified in production.
+snowagent_rpm_disable_gpg_check: "false"
+
 # LogLevel in the application
 snowagent_loglevel: "warning"
 

@@ -1,8 +1,34 @@
 ---
 - name: Prepare Download
   hosts: download
+  vars:
+    __nginx_html_root: "{{ '/var/www/html' if ansible_os_family == 'Debian' else '/usr/share/nginx/html' }}"
   tasks:
-    - name: Prepare Download | Install development dependencies
+    - name: Prepare Download | Read role defaults for the tested snowagent_version
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/../../defaults/main.yml"
+        name: __role_defaults
+
+    - name: Prepare Download | Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+    - name: Prepare Download | Install development dependencies (Debian)
+      ansible.builtin.apt:
+        name:
+          - vim
+          - nginx
+          - rpm
+          - squashfs-tools
+          - ruby
+          - ruby-dev
+          - build-essential
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Prepare Download | Install development dependencies (RedHat)
       ansible.builtin.dnf:
         name:
           - vim
@@ -11,6 +37,7 @@
           - squashfs-tools
           - ruby
         state: present
+      when: ansible_os_family == 'RedHat'
 
     - name: Prepare Download | Start webserver
       ansible.builtin.service:
@@ -28,7 +55,7 @@
         content: |
           #!/usr/bin/env bash
 
-          echo "OK"
+          echo "unibe_snowagent version {{ __role_defaults.snowagent_version }}"
         dest: /tmp/snowagent
         owner: root
         group: root
@@ -36,10 +63,10 @@
 
     - name: Prepare Download | Create RPM Package
       ansible.builtin.command:
-        cmd: fpm -v 1.0 -n snowagent -s dir -t rpm -p /usr/share/nginx/html/snowagent.rpm /tmp/snowagent=/opt/snow/snowagent
-        creates: /usr/share/nginx/html/snowagent.rpm
+        cmd: "fpm -v {{ __role_defaults.snowagent_version }} -n snowagent -s dir -t rpm -p {{ __nginx_html_root }}/snowagent.rpm /tmp/snowagent=/opt/snow/snowagent"
+        creates: "{{ __nginx_html_root }}/snowagent.rpm"
 
     - name: Prepare Download | Create DEB Package
       ansible.builtin.command:
-        cmd: fpm -v 1.0 -n snowagent -s dir -t deb -p /usr/share/nginx/html/snowagent.deb /tmp/snowagent=/opt/snow/snowagent
-        creates: /usr/share/nginx/html/snowagent.deb
+        cmd: "fpm -v {{ __role_defaults.snowagent_version }} -n snowagent -s dir -t deb -p {{ __nginx_html_root }}/snowagent.deb /tmp/snowagent=/opt/snow/snowagent"
+        creates: "{{ __nginx_html_root }}/snowagent.deb"

@@ -81,6 +81,15 @@ defaults of the IT Office of UniBE. If in doubt, use the default.
 The version to be installed. The default reflect the version approved and
 requested by the IT Office of UniBE.
 
+### snowagent_rpm_disable_gpg_check
+
+    snowagent_rpm_disable_gpg_check: "false"
+
+If set to true, skips the GPG signature check when installing the agent
+package on RHEL-based systems. Defaults to false so the package signature is
+always verified against the key added from `snowagent_baseurl`. Only set this
+to true for testing with unsigned packages.
+
 ### snowagent_loglevel
 
     snowagent_loglevel: 'warning'

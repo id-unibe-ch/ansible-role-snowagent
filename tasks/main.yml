@@ -43,6 +43,7 @@
         ansible.builtin.dnf:
           name: "{{ snowagent_download_rpm }}"
           state: present
+          disable_gpg_check: "{{ snowagent_rpm_disable_gpg_check }}"
 
   - name: Install Agent on Debian-based system
     ansible.builtin.apt:
