@@ -7,5 +7,8 @@
       ansible.builtin.include_role:
         name: "unibeid.snowagent"
       vars:
-        snowagent_download_deb: "http://download/snowagent.deb"
-        snowagent_download_rpm: "http://download/snowagent.rpm"
+        snowagent_download_deb: "http://localhost/snowagent.deb"
+        snowagent_download_rpm: "http://localhost/snowagent.rpm"
+        # The locally built test fixture package is not signed with the real
+        # UniBE signing key, so skip gpgcheck for this Molecule scenario only.
+        snowagent_rpm_disable_gpg_check: "true"
