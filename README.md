@@ -127,7 +127,7 @@ Reference this role in your playbook:
 
 This role has been written for and tested on and is therefore compatible with:
 
-* Rocky Linux 8, Rocky Linux 9
+* Rocky Linux 9
 * Ubuntu 22.04, Ubuntu 24.04, Ubuntu 26.04
 
 ## License
