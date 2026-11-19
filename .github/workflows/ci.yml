@@ -37,7 +37,7 @@ jobs:
     # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#using-a-matrix-strategy
     strategy:
       matrix:
-        distro: [rockylinux8, rockylinux9, ubuntu2004, ubuntu2204, ubuntu2404, ubuntu2604]
+        distro: [rockylinux8, rockylinux9, ubuntu2204, ubuntu2404, ubuntu2604]
         scenario: [default]
         include:
           - playbook: converge.yml
@@ -52,7 +52,12 @@ jobs:
           python-version: '3.14'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman
+        # ansible is pinned to the 9.x series (ansible-core ~2.16) because
+        # ansible-core >= 2.17 dropped support for Python < 3.7 on managed
+        # nodes, which breaks the rockylinux8 (Python 3.6) test target. Pin
+        # to the widest-compatible release instead of always installing
+        # "latest" so CI stays reproducible across the full distro matrix.
+        run: pip3 install 'ansible~=9.13.0' molecule 'molecule-plugins[podman]' podman
 
       - name: Run Molecule tests.
         run: molecule test -s ${{ matrix.scenario }}

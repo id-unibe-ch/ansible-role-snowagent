@@ -29,7 +29,6 @@ galaxy_info:
         - '9'
     - name: Ubuntu
       version:
-        - focal
         - jammy
         - noble
         - resolute

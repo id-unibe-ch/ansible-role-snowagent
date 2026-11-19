@@ -5,9 +5,16 @@
     __nginx_html_root: "{{ '/var/www/html' if ansible_os_family == 'Debian' else '/usr/share/nginx/html' }}"
   tasks:
     - name: Prepare Download | Read role defaults for the tested snowagent_version
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/../../defaults/main.yml"
-        name: __role_defaults
+      # Extract just snowagent_version from the raw defaults file instead of
+      # registering the whole file as a var (e.g. via include_vars): several
+      # of its other keys are unresolved Jinja templates referencing sibling
+      # vars (e.g. snowagent_baseurl), and some ansible-core versions eagerly
+      # template an entire complex var when any of its attributes are
+      # accessed, which would fail here since those sibling vars are never
+      # defined in this play.
+      ansible.builtin.set_fact:
+        __snowagent_test_version: >-
+          {{ (lookup('ansible.builtin.file', playbook_dir + '/../../defaults/main.yml') | from_yaml).snowagent_version }}
 
     - name: Prepare Download | Update apt cache
       ansible.builtin.apt:
@@ -55,7 +62,7 @@
         content: |
           #!/usr/bin/env bash
 
-          echo "unibe_snowagent version {{ __role_defaults.snowagent_version }}"
+          echo "unibe_snowagent version {{ __snowagent_test_version }}"
         dest: /tmp/snowagent
         owner: root
         group: root
@@ -63,10 +70,10 @@
 
     - name: Prepare Download | Create RPM Package
       ansible.builtin.command:
-        cmd: "fpm -v {{ __role_defaults.snowagent_version }} -n snowagent -s dir -t rpm -p {{ __nginx_html_root }}/snowagent.rpm /tmp/snowagent=/opt/snow/snowagent"
+        cmd: "fpm -v {{ __snowagent_test_version }} -n snowagent -s dir -t rpm -p {{ __nginx_html_root }}/snowagent.rpm /tmp/snowagent=/opt/snow/snowagent"
         creates: "{{ __nginx_html_root }}/snowagent.rpm"
 
     - name: Prepare Download | Create DEB Package
       ansible.builtin.command:
-        cmd: "fpm -v {{ __role_defaults.snowagent_version }} -n snowagent -s dir -t deb -p {{ __nginx_html_root }}/snowagent.deb /tmp/snowagent=/opt/snow/snowagent"
+        cmd: "fpm -v {{ __snowagent_test_version }} -n snowagent -s dir -t deb -p {{ __nginx_html_root }}/snowagent.deb /tmp/snowagent=/opt/snow/snowagent"
         creates: "{{ __nginx_html_root }}/snowagent.deb"
