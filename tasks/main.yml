@@ -23,7 +23,7 @@
       - name: Add RPM gpg-key
         ansible.builtin.rpm_key:
           key: "{{ snowagent_baseurl }}snow_signing_key_pub.gpg"
-        when: ansible_os_family == 'RedHat'
+        when: ansible_os_family == 'RedHat' and not (snowagent_rpm_disable_gpg_check | bool)
 
       - name: Get Snowagent version
         ansible.builtin.command: /opt/snow/snowagent version
